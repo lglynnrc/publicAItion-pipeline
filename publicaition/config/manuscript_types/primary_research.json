@@ -1,0 +1,260 @@
+{
+  "id": "primary_research",
+  "label": "Primary Research Article",
+  "description": "Full original research article. Stages run in order: Methods → Results → Discussion → Introduction → Conclusion → Cohesion → Abstract → PLS → Assembly.",
+
+  "pre_pipeline": {
+    "extractions": ["bp_chunks", "ko_guides"],
+    "note": "Run once at project setup. Stored per project. Not re-run at pipeline start."
+  },
+
+  "context_availability": {
+    "source_materials": ["methods", "results", "discussion", "introduction"],
+    "literature":        ["discussion", "introduction"]
+  },
+
+  "nodes": [
+    {
+      "section_type": "methods",
+      "label": "Methods",
+      "skill": "methods",
+      "deps": [],
+      "multi_section": false,
+      "context": {
+        "source_materials": true,
+        "literature": false,
+        "upstream_sections": []
+      },
+      "word_count": { "min": 1100, "max": 1200 },
+      "execution_paths": [
+        {
+          "id": "1A",
+          "label": "1-shot",
+          "shots": 1,
+          "wc_constrained": true,
+          "exact_subheaders": true,
+          "description": "All context in a single call. Direct DOCX output."
+        },
+        {
+          "id": "1B",
+          "label": "2-shot",
+          "shots": 2,
+          "description": "Shot 1 captures maximum content freely — no WC constraint, flexible subheaders. Shot 2 tightens to WC and exact subheaders.",
+          "shot_1": { "wc_constrained": false, "exact_subheaders": false },
+          "shot_2": { "wc_constrained": true,  "exact_subheaders": true  }
+        }
+      ],
+      "gate": {
+        "type": "select_merge",
+        "description": "Human selects 1A, 1B, or manually merges the best of both.",
+        "enabled": false,
+        "disabled_reason": "Not used in initial test. Defaults to path 1A.",
+        "default_path": "1A"
+      },
+      "review": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "results",
+      "label": "Results",
+      "skill": "results",
+      "deps": ["methods"],
+      "multi_section": false,
+      "context": {
+        "source_materials": true,
+        "literature": false,
+        "upstream_sections": ["methods"]
+      },
+      "word_count": { "min": 1100, "max": 1200 },
+      "execution_paths": [
+        {
+          "id": "2A",
+          "label": "1-shot",
+          "shots": 1,
+          "wc_constrained": true,
+          "exact_subheaders": true,
+          "description": "All context in a single call including finalized Methods."
+        },
+        {
+          "id": "2B",
+          "label": "2-shot",
+          "shots": 2,
+          "description": "Shot 1 captures maximum content freely. Shot 2 tightens to WC and exact subheaders.",
+          "shot_1": { "wc_constrained": false, "exact_subheaders": false },
+          "shot_2": { "wc_constrained": true,  "exact_subheaders": true  }
+        }
+      ],
+      "gate": {
+        "type": "select_merge",
+        "description": "Human selects 2A, 2B, or manually merges the best of both.",
+        "enabled": false,
+        "disabled_reason": "Not used in initial test. Defaults to path 2A.",
+        "default_path": "2A"
+      },
+      "review": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "discussion",
+      "label": "Discussion",
+      "skill": "discussion",
+      "deps": ["methods", "results"],
+      "multi_section": true,
+      "context": {
+        "source_materials": true,
+        "literature": true,
+        "upstream_sections": ["methods", "results"]
+      },
+      "word_count": { "target": 1200 },
+      "execution_paths": null,
+      "gate": null,
+      "review": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "introduction",
+      "label": "Introduction",
+      "skill": "introduction",
+      "deps": ["methods", "results", "discussion"],
+      "multi_section": true,
+      "context": {
+        "source_materials": true,
+        "literature": true,
+        "upstream_sections": ["methods", "results", "discussion"],
+        "note": "Last stage with source materials and literature. Both drop off after this node."
+      },
+      "word_count": { "target": 650, "paragraphs": 4 },
+      "execution_paths": null,
+      "gate": null,
+      "review": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "conclusion",
+      "label": "Conclusion",
+      "skill": "conclusion",
+      "deps": ["methods", "results"],
+      "multi_section": true,
+      "context": {
+        "source_materials": false,
+        "literature": false,
+        "upstream_sections": ["methods", "results"],
+        "note": "Deliberately limited to Methods and Results only. No source materials, no literature, no other sections. Prevents new claims or overreach."
+      },
+      "word_count": { "target": 200 },
+      "execution_paths": null,
+      "gate": null,
+      "review": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "cohesion",
+      "label": "Cohesion Pass",
+      "skill": "cohesion",
+      "deps": ["discussion", "introduction", "conclusion"],
+      "multi_section": true,
+      "context": {
+        "source_materials": false,
+        "literature": false,
+        "upstream_sections": ["discussion", "introduction", "conclusion"],
+        "note": "Methods and Results are NOT passed in. Cohesion operates only on the three argument sections."
+      },
+      "word_count": { "constraint": "preserve", "note": "Surgical edits only. WC and structure must be maintained." },
+      "tasks": [
+        "reference_unification",
+        "narrative_arc_alignment",
+        "wording_consistency"
+      ],
+      "outputs": ["discussion_revised", "introduction_revised", "conclusion_revised", "unified_reference_list"],
+      "execution_paths": null,
+      "gate": null,
+      "review": null,
+      "enabled": false,
+      "disabled_reason": "Pending med team sign-off on v1 output quality."
+    },
+
+    {
+      "section_type": "abstract",
+      "label": "Abstract",
+      "skill": "abstract",
+      "deps": ["cohesion", "methods", "results", "discussion", "introduction", "conclusion"],
+      "multi_section": true,
+      "context": {
+        "source_materials": false,
+        "literature": false,
+        "upstream_sections": ["methods", "results", "discussion", "introduction", "conclusion"],
+        "note": "Reads all 5 finalized (or cohesion-revised) sections. Every number must match Results exactly."
+      },
+      "word_count": { "min": 300, "max": 400 },
+      "healthgeo": false,
+      "execution_paths": null,
+      "gate": null,
+      "review": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "pls",
+      "label": "Plain Language Summary",
+      "skill": "pls",
+      "deps": ["abstract", "cohesion", "methods", "results", "discussion", "introduction", "conclusion"],
+      "multi_section": true,
+      "context": {
+        "source_materials": false,
+        "literature": false,
+        "upstream_sections": ["abstract", "methods", "results", "discussion", "introduction", "conclusion"],
+        "note": "Full manuscript in context. HealthGEO guidance will be primary driver when available."
+      },
+      "word_count": null,
+      "healthgeo": false,
+      "execution_paths": null,
+      "gate": null,
+      "review": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "review_gate",
+      "label": "Human Review",
+      "skill": null,
+      "deps": ["pls"],
+      "multi_section": false,
+      "context": null,
+      "word_count": null,
+      "execution_paths": null,
+      "gate": {
+        "type": "webhook",
+        "description": "Medical team final review. Validate clinical accuracy, resolve any flagged citations, approve for assembly."
+      },
+      "review": {
+        "type": "webhook",
+        "description": "Medical team final review. Validate clinical accuracy, resolve any flagged citations, approve for assembly."
+      },
+      "enabled": true
+    },
+
+    {
+      "section_type": "assembly",
+      "label": "Final Assembly",
+      "skill": null,
+      "deps": ["review_gate"],
+      "multi_section": false,
+      "context": {
+        "upstream_sections": ["methods", "results", "discussion", "introduction", "conclusion", "abstract", "pls"],
+        "note": "Assembles all finalized sections plus unified reference list and locked figures."
+      },
+      "word_count": null,
+      "execution_paths": null,
+      "gate": null,
+      "review": null,
+      "enabled": true
+    }
+  ],
+
+  "outputs": ["docx", "pdf"]
+}

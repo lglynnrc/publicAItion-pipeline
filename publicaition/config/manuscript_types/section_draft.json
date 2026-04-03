@@ -1,0 +1,153 @@
+{
+  "id": "section_draft",
+  "label": "Single Section Draft",
+  "description": "Draft or redraft one section in isolation. Retrieval and upstream context follow the same rules as the full workflow — the skill is fully grounded. Writer picks the section; the runner assembles whatever context is available in the project state and executes that single node.",
+
+  "execution": {
+    "mode": "single_node",
+    "iteration": true,
+    "description": "Writer re-runs by editing key_points or direction_note. Each run is independent. Context is assembled from project state — whatever has been completed is passed in."
+  },
+
+  "context_availability": {
+    "source_materials": ["methods", "results", "discussion", "introduction"],
+    "literature":        ["discussion", "introduction"]
+  },
+
+  "nodes": [
+    {
+      "section_type": "methods",
+      "label": "Methods",
+      "skill": "methods",
+      "word_count": { "min": 1100, "max": 1200 },
+      "context": {
+        "source_materials": true,
+        "literature": false,
+        "upstream_sections": []
+      },
+      "execution_paths": null,
+      "gate": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "results",
+      "label": "Results",
+      "skill": "results",
+      "word_count": { "min": 1100, "max": 1200 },
+      "context": {
+        "source_materials": true,
+        "literature": false,
+        "upstream_sections": [
+          { "section_type": "methods", "required": false, "note": "Pass if available in project state." }
+        ]
+      },
+      "execution_paths": null,
+      "gate": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "discussion",
+      "label": "Discussion",
+      "skill": "discussion",
+      "word_count": { "target": 1200 },
+      "context": {
+        "source_materials": true,
+        "literature": true,
+        "upstream_sections": [
+          { "section_type": "methods", "required": false, "note": "Pass if available in project state." },
+          { "section_type": "results", "required": false, "note": "Pass if available in project state." }
+        ]
+      },
+      "execution_paths": null,
+      "gate": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "introduction",
+      "label": "Introduction",
+      "skill": "introduction",
+      "word_count": { "target": 650, "paragraphs": 4 },
+      "context": {
+        "source_materials": true,
+        "literature": true,
+        "upstream_sections": [
+          { "section_type": "methods",    "required": false, "note": "Pass if available." },
+          { "section_type": "results",    "required": false, "note": "Pass if available." },
+          { "section_type": "discussion", "required": false, "note": "Strongly recommended — Introduction is designed to set up what Discussion resolves." }
+        ]
+      },
+      "execution_paths": null,
+      "gate": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "conclusion",
+      "label": "Conclusion",
+      "skill": "conclusion",
+      "word_count": { "target": 200 },
+      "context": {
+        "source_materials": false,
+        "literature": false,
+        "upstream_sections": [
+          { "section_type": "methods", "required": false, "note": "Pass if available." },
+          { "section_type": "results", "required": false, "note": "Pass if available." }
+        ],
+        "note": "Constrained to Methods and Results only — clinical guardrail, not a pipeline convenience. Preserved in section draft mode."
+      },
+      "execution_paths": null,
+      "gate": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "abstract",
+      "label": "Abstract",
+      "skill": "abstract",
+      "word_count": { "min": 300, "max": 400 },
+      "context": {
+        "source_materials": false,
+        "literature": false,
+        "upstream_sections": [
+          { "section_type": "methods",      "required": false, "note": "Pass if available." },
+          { "section_type": "results",      "required": false, "note": "Pass if available. Every number in the Abstract must match Results exactly." },
+          { "section_type": "discussion",   "required": false, "note": "Pass if available." },
+          { "section_type": "introduction", "required": false, "note": "Pass if available." },
+          { "section_type": "conclusion",   "required": false, "note": "Pass if available." }
+        ]
+      },
+      "healthgeo": false,
+      "execution_paths": null,
+      "gate": null,
+      "enabled": true
+    },
+
+    {
+      "section_type": "pls",
+      "label": "Plain Language Summary",
+      "skill": "pls",
+      "word_count": null,
+      "context": {
+        "source_materials": false,
+        "literature": false,
+        "upstream_sections": [
+          { "section_type": "abstract",     "required": false, "note": "Pass if available." },
+          { "section_type": "methods",      "required": false, "note": "Pass if available." },
+          { "section_type": "results",      "required": false, "note": "Pass if available." },
+          { "section_type": "discussion",   "required": false, "note": "Pass if available." },
+          { "section_type": "introduction", "required": false, "note": "Pass if available." },
+          { "section_type": "conclusion",   "required": false, "note": "Pass if available." }
+        ]
+      },
+      "healthgeo": false,
+      "execution_paths": null,
+      "gate": null,
+      "enabled": true
+    }
+  ],
+
+  "outputs": ["text"]
+}

@@ -1,0 +1,87 @@
+{
+  "journal": "JAMA",
+  "citation_style": "Vancouver",
+  "constraints": {
+    "max_body_words": 3000,
+    "max_abstract_words": 300,
+    "max_references": 30
+  },
+  "sections": [
+    {
+      "section_type": "methods",
+      "label": "Methods",
+      "max_words": 1200,
+      "retrieval_query": "study design randomization blinding eligibility primary endpoint statistical methods",
+      "presets": [
+        "Align with protocol language",
+        "Tighten to word limit"
+      ],
+      "drafting_instructions": "State: study design, setting, participants (eligibility criteria verbatim from protocol), interventions, primary and secondary outcomes (in order of pre-specification), statistical methods. Use past tense. Do not report results. Copy exact protocol language for eligibility criteria and endpoints. CONSORT and PICO structure. Read like a recipe — every step reproducible. Word limit: 1200."
+    },
+    {
+      "section_type": "results",
+      "label": "Results",
+      "max_words": 1200,
+      "retrieval_query": "primary endpoint results p-value confidence interval adverse events",
+      "presets": [
+        "Report primary endpoint with 95% CI",
+        "Add safety summary"
+      ],
+      "drafting_instructions": "Lead with participant flow (screened → randomized → analyzed). Report primary endpoint first: point estimate, 95% CI, p-value. Secondary endpoints in pre-specified order. Safety data last. All numbers must be traceable to a cited source. No interpretation — reporting only. Past tense throughout. Word limit: 1200."
+    },
+    {
+      "section_type": "discussion",
+      "label": "Discussion",
+      "max_words": 1200,
+      "retrieval_query": "clinical significance prior studies limitations generalizability future directions",
+      "presets": [
+        "Contextualize against published evidence",
+        "Add limitations paragraph"
+      ],
+      "drafting_instructions": "5 paragraphs: (1) restate primary finding and clinical significance; (2) compare to prior studies with citations; (3) mechanistic rationale; (4) limitations — be explicit and complete; (5) future directions and concluding statement. Present tense for established facts; past tense for this study. Word limit: 1200."
+    },
+    {
+      "section_type": "introduction",
+      "label": "Introduction",
+      "max_words": 650,
+      "retrieval_query": "disease burden unmet need study rationale prior evidence",
+      "presets": [
+        "Establish disease burden and gap",
+        "Sharpen the rationale"
+      ],
+      "drafting_instructions": "3 paragraphs: (1) disease burden and unmet need; (2) prior evidence and remaining gap; (3) this study's objective. Do not report results. Present tense for established facts; past tense for prior studies. Final sentence states the primary endpoint precisely. Word limit: 650."
+    },
+    {
+      "section_type": "conclusion",
+      "label": "Conclusion",
+      "max_words": 200,
+      "retrieval_query": "primary finding clinical implication",
+      "presets": [
+        "One-sentence clinical implication"
+      ],
+      "drafting_instructions": "1–3 sentences. Restate the primary finding, its direction, and the clinical implication. No new data. No hedging beyond what the evidence warrants. No references. Word limit: 200."
+    },
+    {
+      "section_type": "abstract",
+      "label": "Abstract",
+      "max_words": 300,
+      "retrieval_query": "study design primary endpoint results conclusions significance",
+      "presets": [
+        "Summarize per JAMA structured abstract format",
+        "Tighten to word limit"
+      ],
+      "drafting_instructions": "Structured abstract with labeled sections: Importance, Objective, Design/Setting/Participants, Interventions, Main Outcomes and Measures, Results, Conclusions and Relevance. Past tense throughout. Results: lead with primary endpoint (point estimate, 95% CI, p-value). Do not introduce information not present in the manuscript. Word limit: 300."
+    },
+    {
+      "section_type": "pls",
+      "label": "Plain Language Summary",
+      "max_words": 400,
+      "retrieval_query": "",
+      "presets": [
+        "Simplify for patient audience",
+        "Add key takeaways bullets"
+      ],
+      "drafting_instructions": "Written for patients and caregivers. US Grade 8–10 reading level. Define all medical terms on first use. Lead with one sentence summarizing the key finding in plain language. Structure: What was the problem? What did researchers do? What did they find? What does it mean for patients? Close with 3–5 Key Takeaways bullets. No citations. No jargon."
+    }
+  ]
+}

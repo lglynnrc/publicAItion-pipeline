@@ -1,0 +1,87 @@
+{
+  "journal": "NEJM",
+  "citation_style": "Vancouver",
+  "constraints": {
+    "max_body_words": 3500,
+    "max_abstract_words": 250,
+    "max_references": 70
+  },
+  "sections": [
+    {
+      "section_type": "methods",
+      "label": "Methods",
+      "max_words": 1200,
+      "retrieval_query": "study design randomization blinding eligibility primary endpoint statistical methods",
+      "presets": [
+        "Align with protocol language",
+        "Tighten to word limit"
+      ],
+      "drafting_instructions": "Use subheadings: Trial Design and Oversight, Participants, Randomization and Blinding, Interventions, Outcomes, Statistical Analysis. State IRB approval and registration number (NCT#). Copy eligibility criteria verbatim from protocol. Power calculation required in Statistical Analysis. Past tense throughout. Word limit: 1200."
+    },
+    {
+      "section_type": "results",
+      "label": "Results",
+      "max_words": 1200,
+      "retrieval_query": "primary endpoint results p-value confidence interval adverse events",
+      "presets": [
+        "Report primary endpoint with 95% CI",
+        "Add safety summary"
+      ],
+      "drafting_instructions": "Use subheadings: Participants, Primary Outcome, Secondary Outcomes, Adverse Events. Lead with CONSORT-style participant flow. Primary outcome: absolute difference or ratio, 95% CI, p-value. Prespecified subgroups in a separate paragraph. Safety: all Grade ≥3 AEs by group, serious AEs, discontinuations. All numbers must be citable. Past tense. Word limit: 1200."
+    },
+    {
+      "section_type": "discussion",
+      "label": "Discussion",
+      "max_words": 1200,
+      "retrieval_query": "clinical significance prior studies limitations generalizability future directions",
+      "presets": [
+        "Contextualize against published evidence",
+        "Add limitations paragraph"
+      ],
+      "drafting_instructions": "NEJM discussions are more expansive than JAMA. 5–6 paragraphs: (1) primary finding restated with effect size; (2) comparison to prior trials with citations; (3) mechanistic explanation; (4) subgroup findings if applicable; (5) explicit limitations — be candid; (6) clinical implications and future work. Present tense for established facts; past tense for this trial. Word limit: 1200."
+    },
+    {
+      "section_type": "introduction",
+      "label": "Introduction",
+      "max_words": 650,
+      "retrieval_query": "disease burden unmet need study rationale prior evidence",
+      "presets": [
+        "Establish disease burden and gap",
+        "Sharpen the rationale"
+      ],
+      "drafting_instructions": "3–4 paragraphs. NEJM expects broader framing than JAMA. Open with the clinical problem at population scale. Paragraph 2: prior evidence and where it falls short. Paragraph 3: mechanistic or conceptual basis for this intervention. Final paragraph: state the hypothesis and primary endpoint precisely. Present tense for established facts; past for prior studies. Word limit: 650."
+    },
+    {
+      "section_type": "conclusion",
+      "label": "Conclusion",
+      "max_words": 200,
+      "retrieval_query": "primary finding clinical implication",
+      "presets": [
+        "One-sentence clinical implication"
+      ],
+      "drafting_instructions": "2–4 sentences. Restate the key finding (effect size, direction), identify who benefits, and state the clinical or policy implication. NEJM allows slightly more interpretive language than JAMA but no overclaiming. No new data. No references. Word limit: 200."
+    },
+    {
+      "section_type": "abstract",
+      "label": "Abstract",
+      "max_words": 250,
+      "retrieval_query": "study design primary endpoint results conclusions significance",
+      "presets": [
+        "Summarize per NEJM structured abstract format",
+        "Tighten to word limit"
+      ],
+      "drafting_instructions": "Structured abstract with these headings: Background, Methods, Results, Conclusions. Keep each section to 1–3 sentences. Results: lead with primary endpoint (point estimate, 95% CI, p-value). Include NCT registration number in Methods. Do not include data not in the article. Past tense. Word limit: 250."
+    },
+    {
+      "section_type": "pls",
+      "label": "Plain Language Summary",
+      "max_words": 400,
+      "retrieval_query": "",
+      "presets": [
+        "Simplify for patient audience",
+        "Add key takeaways bullets"
+      ],
+      "drafting_instructions": "Written for patients and caregivers. US Grade 8–10 reading level. Define all medical terms on first use. Lead with one sentence summarizing the key finding in plain language. Structure: What was the problem? What did researchers do? What did they find? What does it mean for patients? Close with 3–5 Key Takeaways bullets. No citations. No jargon."
+    }
+  ]
+}
