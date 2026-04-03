@@ -10,7 +10,7 @@
 
   "context_availability": {
     "source_materials": ["methods", "results", "discussion", "introduction"],
-    "literature":        ["discussion", "introduction"]
+    "literature":        ["discussion", "introduction", "citations"]
   },
 
   "nodes": [
@@ -166,11 +166,10 @@
       },
       "word_count": { "constraint": "preserve", "note": "Surgical edits only. WC and structure must be maintained." },
       "tasks": [
-        "reference_unification",
         "narrative_arc_alignment",
         "wording_consistency"
       ],
-      "outputs": ["discussion_revised", "introduction_revised", "conclusion_revised", "unified_reference_list"],
+      "outputs": ["discussion_revised", "introduction_revised", "conclusion_revised"],
       "execution_paths": null,
       "gate": null,
       "review": null,
@@ -179,10 +178,29 @@
     },
 
     {
+      "section_type": "citations",
+      "label": "Citations",
+      "skill": "citations",
+      "deps": ["cohesion", "discussion", "introduction", "conclusion", "methods", "results"],
+      "multi_section": true,
+      "context": {
+        "source_materials": false,
+        "literature": true,
+        "upstream_sections": ["methods", "results", "discussion", "introduction", "conclusion"],
+        "note": "Reads all five completed (or cohesion-revised) sections. Retrieves from literature library for reference matching."
+      },
+      "word_count": null,
+      "execution_paths": null,
+      "gate": null,
+      "review": null,
+      "enabled": true
+    },
+
+    {
       "section_type": "abstract",
       "label": "Abstract",
       "skill": "abstract",
-      "deps": ["cohesion", "methods", "results", "discussion", "introduction", "conclusion"],
+      "deps": ["citations", "cohesion", "methods", "results", "discussion", "introduction", "conclusion"],
       "multi_section": true,
       "context": {
         "source_materials": false,
@@ -202,7 +220,7 @@
       "section_type": "pls",
       "label": "Plain Language Summary",
       "skill": "pls",
-      "deps": ["abstract", "cohesion", "methods", "results", "discussion", "introduction", "conclusion"],
+      "deps": ["abstract", "citations", "cohesion", "methods", "results", "discussion", "introduction", "conclusion"],
       "multi_section": true,
       "context": {
         "source_materials": false,

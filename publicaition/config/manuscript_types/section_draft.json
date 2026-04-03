@@ -51,6 +51,7 @@
       "section_type": "discussion",
       "label": "Discussion",
       "skill": "discussion",
+      "multi_section": true,
       "word_count": { "target": 1200 },
       "context": {
         "source_materials": true,
@@ -69,6 +70,7 @@
       "section_type": "introduction",
       "label": "Introduction",
       "skill": "introduction",
+      "multi_section": true,
       "word_count": { "target": 650, "paragraphs": 4 },
       "context": {
         "source_materials": true,
@@ -88,6 +90,7 @@
       "section_type": "conclusion",
       "label": "Conclusion",
       "skill": "conclusion",
+      "multi_section": true,
       "word_count": { "target": 200 },
       "context": {
         "source_materials": false,
@@ -107,6 +110,7 @@
       "section_type": "abstract",
       "label": "Abstract",
       "skill": "abstract",
+      "multi_section": true,
       "word_count": { "min": 300, "max": 400 },
       "context": {
         "source_materials": false,
@@ -129,6 +133,7 @@
       "section_type": "pls",
       "label": "Plain Language Summary",
       "skill": "pls",
+      "multi_section": true,
       "word_count": null,
       "context": {
         "source_materials": false,

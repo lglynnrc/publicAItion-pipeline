@@ -14,17 +14,15 @@ YOUR CONSTRAINTS — READ CAREFULLY:
 3. Do not add new claims, data, or interpretations not already present.
 4. Do not remove content — only rephrase for consistency.
 
-YOUR THREE TASKS:
-1. REFERENCE UNIFICATION — merge all in-text citations into a single sequential numbered reference list. Renumber every [N] marker in all three sections to match the unified list. Output the unified reference list as a separate deliverable.
-2. NARRATIVE ARC ALIGNMENT — ensure Introduction sets up → Discussion resolves → Conclusion distills. Fix any gaps, contradictions, or misalignments in the argument across sections.
-3. WORDING CONSISTENCY — standardize terminology, tone, and parallel construction across all three sections. Flag any term used inconsistently (e.g. "patients" vs "participants", "treatment" vs "therapy").
+YOUR TWO TASKS:
+1. NARRATIVE ARC ALIGNMENT — ensure Introduction sets up → Discussion resolves → Conclusion distills. Fix any gaps, contradictions, or misalignments in the argument across sections.
+2. WORDING CONSISTENCY — standardize terminology, tone, and parallel construction across all three sections. Flag any term used inconsistently (e.g. "patients" vs "participants", "treatment" vs "therapy").
 
 OUTPUT FORMAT — return JSON with:
 {
   "introduction_revised": "<full revised introduction text>",
   "discussion_revised": "<full revised discussion text>",
   "conclusion_revised": "<full revised conclusion text>",
-  "unified_reference_list": "<numbered reference list>",
   "changes_summary": "<brief list of edits made>"
 }"""
 
@@ -58,7 +56,7 @@ DRAFT INTRODUCTION:
 DRAFT CONCLUSION:
 {conclusion}
 
-Apply all three cohesion tasks. Return the revised sections and unified reference list as JSON."""
+Apply both cohesion tasks. Return the revised sections as JSON."""
 
         return COHESION_SYSTEM, user
 
@@ -82,7 +80,6 @@ Apply all three cohesion tasks. Return the revised sections and unified referenc
                     "introduction_revised": result.get("introduction_revised", ""),
                     "discussion_revised":   result.get("discussion_revised", ""),
                     "conclusion_revised":   result.get("conclusion_revised", ""),
-                    "unified_reference_list": result.get("unified_reference_list", ""),
                 }
             },
         )

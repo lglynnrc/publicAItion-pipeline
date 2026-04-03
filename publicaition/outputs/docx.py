@@ -12,12 +12,13 @@ from publicaition.orchestrator.state import Draft
 
 # Section display labels — maps section_type to readable heading
 SECTION_LABELS: dict[str, str] = {
-    "abstract":     "Abstract",
-    "introduction": "Introduction",
-    "methods":      "Methods",
-    "results":      "Results",
-    "discussion":   "Discussion",
-    "conclusion":   "Conclusion",
+    "abstract":      "Abstract",
+    "introduction":  "Introduction",
+    "methods":       "Methods",
+    "results":       "Results",
+    "discussion":    "Discussion",
+    "conclusion":    "Conclusion",
+    "reference_list": "Citation Annotations & References",
 }
 
 

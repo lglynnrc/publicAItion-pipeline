@@ -43,7 +43,7 @@ def render(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     sections, included, missing = _collect_sections(state)
-    reference_list = state.drafts.get("unified_reference_list")
+    reference_list = state.drafts.get("reference_list")
     pls_draft = state.draft_for("pls") if include_pls else None
 
     docx_path = output_dir / f"{_slug(project_name)}.docx"

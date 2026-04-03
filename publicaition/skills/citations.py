@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from publicaition.orchestrator.state import Draft
 from publicaition.services.base import FewShotExample, RetrievedChunk, SectionTemplate
-from publicaition.skills.base import AbstractSkill
+from publicaition.skills.base import MultiSectionSkill
 
 # Marker legend passed to Claude so it applies consistently
 MARKER_LEGEND = """Citation marker legend:
@@ -35,38 +35,27 @@ REFERENCE LIST:
 UNRESOLVED MARKERS:
 List all [?] and [!] markers with the claim text and reason."""
 
+# Document section order for draft assembly
+_SECTION_ORDER = ["methods", "results", "discussion", "introduction", "conclusion"]
 
-class CitationsSkill(AbstractSkill):
+
+class CitationsSkill(MultiSectionSkill):
     """
-    Validates claims in all completed drafts and inserts citation markers.
-    Unlike other skills, CitationsSkill operates on the full assembled draft,
-    not a single section. Library retrieval is done per-claim.
+    Validates claims across all completed drafts and inserts citation markers.
+    Operates on the assembled manuscript (all five sections), not a single section.
+    Retrieves from the literature library for reference matching.
     """
     section_type = "citations"
-    retrieves = False   # retrieval is done claim-by-claim inside run()
+    retrieves = True
 
     def _build_prompt(
         self,
         chunks: list[RetrievedChunk],
         template: SectionTemplate,
         examples: list[FewShotExample],
+        upstream_drafts: dict[str, Draft],
     ) -> tuple[str, str]:
-        # Not used directly — run() is overridden
-        return SYSTEM_PROMPT, ""
-
-    async def run(self, top_k: int = 8) -> Draft:  # type: ignore[override]
-        """
-        Annotate all assembled draft sections with citation markers.
-        Sections are passed via brief.key_points[0] as a serialized draft
-        (set by the runner before calling build_skill for citations).
-        """
-        # The runner passes the assembled draft text via brief
-        full_draft = "\n\n".join(self.brief.key_points) if self.brief.key_points else ""
-        if not full_draft:
-            return Draft(section_type="citations", text="", metadata={"error": "No draft text provided."})
-
-        # Retrieve supporting evidence for the full draft
-        chunks = await self._retrieve(top_k)
+        full_draft = _assemble_draft(upstream_drafts)
         evidence = _format_evidence(chunks)
 
         user = f"""Annotate the manuscript draft below with citation markers.
@@ -79,7 +68,14 @@ MANUSCRIPT DRAFT:
 
 Apply markers per the legend. Return annotated draft + reference list + unresolved markers."""
 
-        response = await self.services.llm.generate(SYSTEM_PROMPT, user, max_tokens=8192)
+        return SYSTEM_PROMPT, user
+
+    async def run(self, upstream_drafts: dict[str, Draft], top_k: int = 8) -> Draft:  # type: ignore[override]
+        chunks = await self._retrieve(top_k)
+        template = self.services.templates.get_section(self.context.journal, self.section_type)
+        examples = await self.services.few_shot.get_examples(self.context.project_id, self.section_type)
+        system, user = self._build_prompt(chunks, template, examples, upstream_drafts)
+        response = await self.services.llm.generate(system, user, max_tokens=8192)
         return Draft(
             section_type="citations",
             text=response.text,
@@ -88,6 +84,15 @@ Apply markers per the legend. Return annotated draft + reference list + unresolv
 
     def _enrich_query(self) -> str:
         return f"{self.context.indication} {self.context.primary_endpoint} clinical trial results"
+
+
+def _assemble_draft(upstream_drafts: dict[str, Draft]) -> str:
+    sections = []
+    for section_type in _SECTION_ORDER:
+        draft = upstream_drafts.get(section_type)
+        if draft and draft.text:
+            sections.append(f"[{section_type.upper()}]\n{draft.text}")
+    return "\n\n".join(sections) if sections else ""
 
 
 def _format_evidence(chunks: list[RetrievedChunk]) -> str:

@@ -64,34 +64,55 @@ async def _execute_node(
     draft = await skill.run(upstream_drafts=upstream) if node.multi_section else await skill.run()
     state.drafts[node.section_type] = draft
     _unpack_cohesion(draft, state)
+    _unpack_citations(draft, state)
     state.completed.add(node.section_type)
+
+
+def _unpack_citations(draft: Draft, state: PipelineState) -> None:
+    """
+    Store the citations output as 'reference_list' in state so the renderer
+    can include it as a section in the final DOCX.
+    """
+    if draft.section_type == "citations" and draft.text:
+        state.drafts["reference_list"] = Draft(
+            section_type="reference_list", text=draft.text
+        )
 
 
 def _unpack_cohesion(draft: Draft, state: PipelineState) -> None:
     """
-    Cohesion returns four outputs inside Draft.metadata["cohesion_outputs"].
-    Unpack each into state.drafts so downstream skills (Abstract, PLS) and
+    Cohesion returns three revised sections inside Draft.metadata["cohesion_outputs"].
+    Unpack each into state.drafts so downstream skills (Citations, Abstract, PLS) and
     state.draft_for() automatically serve the revised versions.
     """
     outputs = draft.metadata.get("cohesion_outputs")
     if not outputs:
         return
     for key, text in outputs.items():
-        if key == "unified_reference_list":
-            state.drafts["unified_reference_list"] = Draft(
-                section_type="unified_reference_list", text=text
-            )
-        elif text:
+        if text:
             # e.g. "discussion_revised" → stored under that key
             state.drafts[key] = Draft(section_type=key, text=text)
 
 
 def _collect_upstream(node: DAGNode, state: PipelineState) -> dict[str, Draft]:
-    return {
-        s: state.draft_for(s)
-        for s in node.upstream_sections
-        if isinstance(s, str) and state.draft_for(s) is not None
-    }
+    """
+    Build the upstream drafts dict for a node.
+    Handles both string lists (primary_research.json) and object lists
+    (section_draft.json uses {"section_type": "methods", "required": false, ...}).
+    """
+    result: dict[str, Draft] = {}
+    for s in node.upstream_sections:
+        if isinstance(s, str):
+            section_type = s
+        elif isinstance(s, dict):
+            section_type = s.get("section_type", "")
+        else:
+            continue
+        if section_type:
+            draft = state.draft_for(section_type)
+            if draft is not None:
+                result[section_type] = draft
+    return result
 
 
 def _resolve_libraries(node: DAGNode, dag: DAG, inputs: ProjectInputs) -> list[str]:

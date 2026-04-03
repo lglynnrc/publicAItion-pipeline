@@ -16,7 +16,7 @@ Takes a clinical study's raw materials and drafts a full manuscript section by s
 
 ```
 methods → results → discussion → introduction → conclusion
-       → cohesion (disabled v1) → abstract → pls → [review gate] → assembly
+       → cohesion (disabled v1) → citations → abstract → pls → [review gate] → assembly
 ```
 
 Discussion and conclusion run in parallel (both depend only on methods + results). Introduction runs after discussion. Abstract runs after all five sections. PLS runs after abstract.
@@ -74,6 +74,7 @@ Source materials (CSR, SAP, Tables/Figs) and published literature are available 
 | Introduction | Yes | Yes |
 | Conclusion | No | No |
 | Cohesion | No | No |
+| Citations | No | Yes |
 | Abstract | No | No |
 | PLS | No | No |
 
@@ -109,7 +110,7 @@ publicaition/
     abstract.py               Reads all 5 sections
     cohesion.py               Reads discussion/introduction/conclusion, 4 outputs
     pls.py                    Reads full manuscript, lay language
-    citations.py              Annotates claims with [N]/[N?]/[?]/[!]
+    citations.py              Annotates claims with [N]/[N?]/[?]/[!] (MultiSectionSkill, reads all 5 sections)
     registry.py               build_skill()
   orchestrator/
     state.py                  ProjectInputs, PipelineState, Draft
@@ -129,14 +130,36 @@ publicaition/
 Requires Python 3.11+ and [uv](https://github.com/astral-sh/uv).
 
 ```bash
-uv venv --python 3.12
-uv pip install -e ".[dev]"
+uv sync --extra dev
 ```
 
 Requires:
 - `ANTHROPIC_API_KEY` — for all LLM calls
-- Qdrant instance — for vector retrieval (local or cloud)
+- `QDRANT_URL` — Qdrant instance for vector retrieval (local or cloud)
+- `QDRANT_API_KEY` — optional, for Qdrant Cloud
 - LibreOffice (optional) — for PDF export (`brew install libreoffice`)
+
+## Running the API server
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-... QDRANT_URL=http://localhost:6333 \
+  uv run uvicorn publicaition.api.app:app --reload
+```
+
+Endpoints:
+- `POST /api/v1/runs` — start a full pipeline run (returns `run_id`, 202 Accepted)
+- `GET  /api/v1/runs/{run_id}` — poll for state and drafts
+- `POST /api/v1/section` — draft a single section synchronously
+
+## Running tests
+
+```bash
+# Wiring and DAG tests (no API key needed)
+uv run python -m pytest tests/ -v
+
+# Full smoke test (requires API key)
+ANTHROPIC_API_KEY=sk-ant-... uv run python -m pytest tests/ -v
+```
 
 ---
 

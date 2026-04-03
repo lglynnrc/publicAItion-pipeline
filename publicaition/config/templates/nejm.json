@@ -82,6 +82,14 @@
         "Add key takeaways bullets"
       ],
       "drafting_instructions": "Written for patients and caregivers. US Grade 8–10 reading level. Define all medical terms on first use. Lead with one sentence summarizing the key finding in plain language. Structure: What was the problem? What did researchers do? What did they find? What does it mean for patients? Close with 3–5 Key Takeaways bullets. No citations. No jargon."
+    },
+    {
+      "section_type": "citations",
+      "label": "Citations",
+      "max_words": 0,
+      "retrieval_query": "clinical evidence references supporting claims",
+      "presets": [],
+      "drafting_instructions": "Annotate every factual claim, statistic, or assertion with a citation marker ([N], [N?], [?], or [!]). Return the annotated draft followed by a numbered Vancouver-style reference list and a summary of all unresolved markers."
     }
   ]
 }
